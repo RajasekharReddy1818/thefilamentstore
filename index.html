@@ -10,8 +10,8 @@
 <style>
 :root{--bg:#040907;--card:#0a1410;--line:#19e68a30;--g:#19e68a;--t:#eaf7f0;--m:#8ea99b;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px));height:100%}
-body{background:radial-gradient(900px 520px at 78% 0,#0b3a25 0,transparent 62%),var(--bg);color:var(--t);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100%}
+html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px));background:#040907}
+body{background:radial-gradient(900px 520px at 78% 0,#0b3a25 0,transparent 62%) no-repeat;color:var(--t);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100%}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#040907;z-index:30}
 h1,h2,h3,nav a,.btn,.eye,.logo,.f{font-family:Rajdhani,"Segoe UI",sans-serif;text-transform:uppercase}
 a{color:inherit}
@@ -75,7 +75,7 @@ li svg{color:var(--g);flex:none}
 .banner>div{flex:1;min-width:220px}
 .banner h2{font-size:28px;margin:2px 0}
 footer{border-top:1px solid var(--line);margin-top:20px}
-.fg{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:24px}
+.fg{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:24px}
 .fg h3{font-size:15px;color:var(--g);margin-bottom:8px}
 .fg a{display:block;color:var(--m);text-decoration:none;font-size:13px;padding:2px 0}
 .fg a:hover{color:var(--g)}
@@ -128,7 +128,16 @@ html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body{overflow-x:clip}
 img{max-width:100%}
 #drawer{visibility:hidden;transition:transform .25s,visibility .25s}#drawer.open{visibility:visible}
-@media(max-width:760px){.bar{gap:12px;padding:10px 14px}.logo{font-size:18px}section,.wrap{padding:26px 16px}.stage{min-height:320px}nav{display:none}.hero,.about{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}.bar .btn span{display:none}}
+.touch{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;align-items:center;padding:30px;border-radius:18px;color:#03130b;background:linear-gradient(135deg,#19e68a,#0fa968);box-shadow:0 20px 60px #19e68a2e}
+.touch .eye,.touch h2{color:#03130b}
+.touch p{margin:10px 0 14px;max-width:46ch;font-weight:500}
+.tags span{display:inline-block;border:1.5px solid #03130b80;border-radius:20px;padding:2px 11px;margin:0 6px 6px 0;font:600 12px Rajdhani,sans-serif;text-transform:uppercase}
+.acts{display:grid;gap:12px}
+.acts .btn{padding:14px 18px;font-size:16px}
+.btn.dk{background:#03130b;color:var(--g)}
+.btn.out{background:transparent;color:#03130b;border:2px solid #03130b}
+nav a[href="#contact"]{color:var(--g);border:1px solid var(--g);border-radius:20px;padding:2px 14px}
+@media(max-width:760px){.touch{grid-template-columns:1fr;padding:22px}.minis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.mini{width:auto}.fg>div:first-child{grid-column:1/-1}.bar{gap:12px;padding:10px 14px}.logo{font-size:18px}section,.wrap{padding:26px 16px}.stage{min-height:320px}nav{display:none}.hero,.about{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}.bar .btn span{display:none}}
 </style>
 </head>
 <body>
@@ -138,7 +147,6 @@ img{max-width:100%}
   <nav><a href="#home">Home</a><a href="#products">Products</a><a href="#about">About</a><a href="#why">Why Us</a><a href="#contact">Contact</a></nav>
   <a class="ic" href="#products" aria-label="Browse products" data-ic="search"></a>
   <button class="ic" id="open" aria-label="Open cart"><i data-ic="cart"></i><b class="badge" id="cnt" hidden>0</b></button>
-  <button class="btn" onclick="order()"><span>Order on WhatsApp</span><i data-ic="wa"></i></button>
 </div></header>
 
 <section class="hero" id="home">
@@ -182,12 +190,24 @@ img{max-width:100%}
   <a class="btn" href="#products">Start Shopping <i data-ic="arrow"></i></a>
 </div></div>
 
-<footer id="contact"><div class="wrap">
+<div class="wrap" id="contact"><div class="touch">
+  <div>
+    <div class="eye">Get in touch</div>
+    <h2>Bulk order or a question?</h2>
+    <p>Planning a bigger order, need help choosing a filament, or want to know about delivery? Message us and we will get back to you.</p>
+    <div class="tags"><span>Bulk orders</span><span>Material advice</span><span>Shipping</span></div>
+  </div>
+  <div class="acts">
+    <a class="btn dk" href="https://wa.me/918629006959?text=Hi!%20I%20have%20an%20enquiry%20about%20The%20Filament%20Store." target="_blank" rel="noopener"><i data-ic="wa"></i> Chat on WhatsApp</a>
+    <a class="btn out" href="tel:+918629006959"><i data-ic="phone"></i> Call +91 86290 06959</a>
+  </div>
+</div></div>
+
+<footer><div class="wrap">
   <div class="fg">
     <div><a class="logo" href="#home" style="font-size:20px;color:var(--t)">The <b>Filament</b> Store</a><p class="m" style="font-size:13px;margin-top:8px;max-width:30ch">High quality 3D printer filaments for creators, engineers and businesses.</p></div>
     <div><h3>Quick Links</h3><a href="#home">Home</a><a href="#products">Products</a><a href="#about">About</a><a href="#why">Why Us</a><a href="#contact">Contact</a></div>
     <div><h3>Products</h3><span id="flinks"></span></div>
-    <div><h3>Get in Touch</h3><button class="btn" onclick="order()"><i data-ic="wa"></i> Order on WhatsApp</button><p class="m" style="font-size:12px;margin-top:10px">For orders and enquiries, message us on WhatsApp: <a href="https://wa.me/918629006959" style="color:var(--g)">+91 86290 06959</a></p></div>
   </div>
   <div class="copy"><span>© 2026 The Filament Store. All rights reserved.</span><span>Designed for creators, by creators.</span></div>
 </div></footer>
@@ -216,7 +236,7 @@ search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
 cart:'<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
 check:'<path d="M20 6 9 17l-5-5"/>',
 wa:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
-x:'<path d="M18 6 6 18M6 6l12 12"/>'};
+x:'<path d="M18 6 6 18M6 6l12 12"/>',phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>'};
 const ic=(k,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
 const spool=c=>`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#161c19" stroke="#ffffff30"/><circle cx="50" cy="50" r="38" fill="${c}"/><circle cx="50" cy="50" r="38" fill="none" stroke="#0005" stroke-width="5" stroke-dasharray="1 3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#fff3" stroke-width="1.5"/><circle cx="50" cy="50" r="16" fill="#0b0f0d" stroke="#ffffff40"/><circle cx="50" cy="50" r="7" fill="#040706"/></svg>`;
 const COL=[["White","#f2f2f2"],["Black","#2b312e"],["Red","#e53935"],["Blue","#1e6fe0"],["Green","#19c46a"],["Orange","#f59a23"],["Grey","#7d8480"]];
@@ -278,7 +298,7 @@ document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=ic(e.dataset.ic,e.
 document.querySelectorAll("img[data-spool]").forEach(i=>i.src=IMG);
 $("mq").innerHTML=Array(2).fill(P.map(x=>`<span>${x.n}</span><b>✦</b>`).join("").repeat(3)).join("");
 const fine=matchMedia("(hover:hover) and (pointer:fine)").matches,calm=matchMedia("(prefers-reduced-motion:reduce)").matches;
-document.querySelectorAll(".card,.head,.why,.banner,.about>*").forEach((e,i)=>{e.classList.add("rv");e.style.transitionDelay=(i%4)*70+"ms"});
+document.querySelectorAll(".card,.head,.why,.banner,.touch,.about>*").forEach((e,i)=>{e.classList.add("rv");e.style.transitionDelay=(i%4)*70+"ms"});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);setTimeout(()=>e.target.style.transitionDelay="",900)}}),{threshold:.1});
 document.querySelectorAll(".rv").forEach(e=>io.observe(e));
 if(!calm){
