@@ -136,6 +136,14 @@ img{max-width:100%}
 .acts .btn{padding:14px 18px;font-size:16px}
 .btn.dk{background:#03130b;color:var(--g)}
 .btn.out{background:transparent;color:#03130b;border:2px solid #03130b}
+.cp{display:flex;gap:8px;margin-top:12px}
+.cp input{margin:0;flex:1;text-transform:uppercase;letter-spacing:.05em}
+.cp input::placeholder{text-transform:none;letter-spacing:0}
+.cp .btn{padding:0 16px}
+.cmsg{font-size:13px;min-height:20px;margin:6px 0 10px}
+.sum div{display:flex;justify-content:space-between;font-size:14px;color:var(--m);margin-bottom:4px}
+.sum #dr{color:var(--g)}
+.sum [hidden]{display:none}
 nav a[href="#contact"]{color:var(--g);border:1px solid var(--g);border-radius:20px;padding:2px 14px}
 @media(max-width:760px){.touch{grid-template-columns:1fr;padding:22px}.minis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.mini{width:auto}.fg>div:first-child{grid-column:1/-1}.bar{gap:12px;padding:10px 14px}.logo{font-size:18px}section,.wrap{padding:26px 16px}.stage{min-height:320px}nav{display:none}.hero,.about{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}.bar .btn span{display:none}}
 </style>
@@ -215,6 +223,9 @@ nav a[href="#contact"]{color:var(--g);border:1px solid var(--g);border-radius:20
 <aside id="drawer" aria-label="Your order">
   <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:26px">Your Order</h2><button class="ic" id="close" aria-label="Close" data-ic="x"></button></div>
   <div id="items"></div>
+  <div class="cp"><input id="cc" placeholder="Coupon code" autocapitalize="characters" autocomplete="off" aria-label="Coupon code"><button class="btn" id="ca" type="button">Apply</button></div>
+  <p id="cm" class="cmsg" role="status"></p>
+  <div class="sum"><div><span>Subtotal</span><span id="sub">₹ 0</span></div><div id="dr" hidden><span id="dl"></span><span id="dv"></span></div></div>
   <div class="tot"><span>Total</span><span id="tot">₹ 0</span></div>
   <label for="nm">Full name</label><input id="nm" autocomplete="name" placeholder="Your name">
   <label for="ad">Shipping address</label><textarea id="ad" rows="3" autocomplete="street-address" placeholder="House no., street, city, state, PIN code"></textarea>
@@ -264,9 +275,15 @@ $("prods").innerHTML=P.map((x,i)=>{x.cn=cn(x.c);return `<article class="card" da
 <div class="buy"><div class="qty"><button data-a="-" aria-label="Decrease">−</button><span>1</span><button data-a="+" aria-label="Increase">+</button></div><button class="btn" data-add>${ic("cart",16)} Add to Cart</button></div></article>`}).join("");
 
 const cart={};
+const COUPONS={SRIJA350:350}; // code -> rupees off PER SPOOL. Add more codes here.
+let coupon="";
+const calc=()=>{const it=Object.values(cart),spools=it.reduce((s,i)=>s+i.q,0),sub=it.reduce((s,i)=>s+i.q*i.p,0),d=coupon?it.reduce((s,i)=>s+i.q*Math.min(COUPONS[coupon],i.p),0):0;return{it,spools,sub,d,total:sub-d}};
+const cm=(t,ok)=>{$("cm").textContent=t;$("cm").style.color=ok?"var(--g)":"#ffb4a8"};
 function draw(){
   const it=Object.entries(cart),n=it.reduce((s,[,i])=>s+i.q,0),t=it.reduce((s,[,i])=>s+i.q*i.p,0);
-  $("cnt").textContent=n;$("cnt").hidden=!n;$("tot").textContent=R(t);
+  $("cnt").textContent=n;$("cnt").hidden=!n;const c=calc();$("sub").textContent=R(c.sub);$("dr").hidden=!c.d;
+  if(c.d){$("dl").textContent=`Coupon ${coupon} (${c.spools} × ${R(COUPONS[coupon])})`;$("dv").textContent="− "+R(c.d)}
+  $("tot").textContent=R(c.total);
   $("items").innerHTML=it.length?it.map(([k,i])=>`<div class="row"><i class="dot" style="background:${i.h}"></i><div style="flex:1"><b>${i.n}</b><br><small class="m">${i.col} · ${R(i.p)}</small></div><div class="qty"><button data-k="${k}" data-a="-" aria-label="Decrease">−</button><span>${i.q}</span><button data-k="${k}" data-a="+" aria-label="Increase">+</button></div></div>`).join(""):'<p class="m">Your cart is empty. Pick a filament and add it to your cart.</p>';
 }
 $("prods").onclick=e=>{
@@ -283,14 +300,22 @@ $("items").onclick=e=>{
   const b=e.target.closest("button");if(!b||!b.dataset.k)return;
   const i=cart[b.dataset.k];i.q+=b.dataset.a=="+"?1:-1;if(i.q<1)delete cart[b.dataset.k];draw();
 };
+$("ca").onclick=()=>{
+  if(coupon){coupon="";$("cc").value="";$("cc").readOnly=false;$("ca").textContent="Apply";cm("");draw();return}
+  const v=$("cc").value.trim().toUpperCase();
+  if(!v)return cm("Enter a coupon code.",0);
+  if(!COUPONS.hasOwnProperty(v))return cm("Invalid coupon code.",0);
+  coupon=v;$("cc").value=v;$("cc").readOnly=true;$("ca").textContent="Remove";cm(`Coupon applied: ${R(COUPONS[v])} off per spool.`,1);draw();
+};
+$("cc").onkeydown=e=>{if(e.key=="Enter"){e.preventDefault();$("ca").click()}};
 $("open").onclick=()=>$("drawer").classList.add("open");
 $("close").onclick=()=>$("drawer").classList.remove("open");
 function order(){$("drawer").classList.add("open")}
 $("place").onclick=()=>{
-  const it=Object.values(cart),nm=$("nm").value.trim(),ad=$("ad").value.trim(),t=it.reduce((s,i)=>s+i.q*i.p,0);
+  const it=Object.values(cart),nm=$("nm").value.trim(),ad=$("ad").value.trim(),c=calc();
   const e=!it.length?"Your cart is empty. Add a filament first.":!nm?"Please enter your name.":ad.length<10?"Please enter your full shipping address.":"";
   $("err").style.color=e?"#ffb4a8":"var(--g)";$("err").textContent=e;if(e)return;
-  const msg="*New order – The Filament Store*\n\n*Name:* "+nm+"\n*Shipping address:* "+ad+"\n\n*Order*\n"+it.map(i=>`• ${i.n} (${i.col}) × ${i.q} = ${R(i.p*i.q)}`).join("\n")+"\n\n*Total:* "+R(t);
+  const msg="*New order – The Filament Store*\n\n*Name:* "+nm+"\n*Shipping address:* "+ad+"\n\n*Order*\n"+it.map(i=>`• ${i.n} (${i.col}) × ${i.q} = ${R(i.p*i.q)}`).join("\n")+(c.d?"\n\n*Subtotal:* "+R(c.sub)+"\n*Coupon "+coupon+":* − "+R(c.d):"")+"\n\n*Total:* "+R(c.total);
   window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(msg),"_blank");
   $("err").textContent="WhatsApp opened. Tap Send there to confirm your order.";
 };
