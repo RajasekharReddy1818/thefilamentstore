@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.thefilamentstore.in/sitemap.xml
